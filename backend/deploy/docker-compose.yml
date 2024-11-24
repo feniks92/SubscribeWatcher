@@ -1,0 +1,28 @@
+services:
+
+  db:
+    image: postgres:17
+    container_name: db
+    hostname: db
+    volumes:
+      - db-data:/var/lib/postgresql/data/pgdata
+    command: postgres -c max_connections=5000
+    environment:
+      - PGDATA=/var/lib/postgresql/data/pgdata
+      - POSTGRES_SERVER=db
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=watcher-db
+    ports:
+      - "5432:5432"
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "1"
+    restart: always
+
+
+
+volumes:
+  db-data:

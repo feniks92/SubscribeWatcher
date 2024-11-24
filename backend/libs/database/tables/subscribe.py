@@ -5,7 +5,7 @@ from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql.schema import ForeignKey, Index
 
-from libs.database.tables import Base
+from libs.database.tables.base import Base
 
 
 class Subscribe(Base):
@@ -16,7 +16,7 @@ class Subscribe(Base):
     user_profile_id = Column(Integer, ForeignKey('user_profile.id'), nullable=False)
     user_profile = relationship('UserProfile', back_populates='subscribes')
 
-    channel_id = Column(Integer, ForeignKey('channels.id'), nullable=False)
+    channel_id = Column(Integer, ForeignKey('channel.id'), nullable=False)
     channel = relationship('Channel', back_populates='subscribes')
 
     start_at = Column(DateTime(timezone=True), nullable=False, server_default=func.now())

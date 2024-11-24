@@ -2,7 +2,7 @@ from sqlalchemy import Column, DateTime, Integer, func, String, ForeignKey
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql.schema import ForeignKey, Index
 
-from libs.database.tables import Base
+from libs.database.tables.base import Base
 
 
 class Channel(Base):
@@ -28,7 +28,7 @@ class Channel(Base):
 
     joined_at = Column('joined_at', DateTime, nullable=False, server_default=func.now())
     updated_at = Column('updated_at', DateTime, nullable=False,
-                        server_default=func.now(), nupdate=func.now())
+                        server_default=func.now(), onupdate=func.now())
 
     __table_args__ = (
         Index('ix_channel_owner_id_telegram_id', owner_id, telegram_id),

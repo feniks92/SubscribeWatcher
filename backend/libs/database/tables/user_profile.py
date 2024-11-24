@@ -2,7 +2,7 @@ from sqlalchemy import Column, DateTime, Integer, func
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql.schema import ForeignKey, Index
 
-from libs.database.tables import Base
+from libs.database.tables.base import Base
 
 
 class UserProfile(Base):

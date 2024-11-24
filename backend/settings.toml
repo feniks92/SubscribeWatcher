@@ -21,8 +21,6 @@ dynaconf_merge = true
     SERVICE.ACCESS_TOKEN_ENVIRONMENT = 'prod'
     SERVICE.SHOW_API_DOCS = false
 
-    LOG.CLEAN_HEADER_IN_EXTRA = false
-    LOG.ENCRYPT_PROTECTED_VALUES = true
     LOG.LEVEL = 'debug'
     LOG.FORMAT = 'json'
     LOG.ENCRYPT_PROTECTED_VALUES = false
@@ -38,3 +36,9 @@ dynaconf_merge = true
     CACHE.COMMON.URL = 'redis://redis:6379/1'
     CACHE.COMMON.USE_ENCRYPTION.KEY = false
     CACHE.COMMON.USE_ENCRYPTION.VALUE = false
+
+    DATABASE.DB_URI = 'postgresql+asyncpg://localhost:5432/watcher-db'
+    DATABASE.HOST = 'localhost'
+    # TODO вынести логин с паролем в .secrets.toml
+    DATABASE.USERNAME = 'postgres'
+    DATABASE.PASSWORD = 'password'
