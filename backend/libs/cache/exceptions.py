@@ -1,0 +1,2 @@
+class RedisStorageConnectionError(Exception):
+    pass

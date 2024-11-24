@@ -1,0 +1,40 @@
+# Параметры приложения, которые могут быть переопределены параметрами окружения
+#------------------------------------------------------------------------------------------------
+# Например: для переменной IS_PRODUCTION будет `export SUBWTCH_IS_PRODUCTION=true`
+# также это работает в файлах .env, Dockerfile, docker.env и docker.compose.yaml
+# Для всех переменных окружения необходим префикс SUBWTCH, т.е. для переменной IS_PRODUCTION в окружении будет SUBWTCH_IS_PRODUCTION
+# Разделен на 2 файла с натсрйоками - этот и .secrets.toml - туда заносятся пароли, ключи и другие
+# чувствительные к безопасности данные
+# Конфигурация разделена на [default] и накладываемые (merged) на [default] - см. ниже в описании
+# ВАЖНО!!! Необходимо осторожно добавлять массивы и словари, т.к. при включенном флаге merged
+# такие настройки объединяются, а не подменяются, как для настроек неизменяемых типов
+
+dynaconf_merge = true
+[default]
+    HOST = '0.0.0.0'
+    PORT = 8080
+    DEBUG = false
+
+    SERVICE.APP_NAME = "subscribe watcher"
+    SERVICE.URL_ROOT_PATH = ''
+    SERVICE.VERSION = '0.1.0'
+    SERVICE.ACCESS_TOKEN_ENVIRONMENT = 'prod'
+    SERVICE.SHOW_API_DOCS = false
+
+    LOG.CLEAN_HEADER_IN_EXTRA = false
+    LOG.ENCRYPT_PROTECTED_VALUES = true
+    LOG.LEVEL = 'debug'
+    LOG.FORMAT = 'json'
+    LOG.ENCRYPT_PROTECTED_VALUES = false
+    LOG.CLEAN_HEADER_IN_EXTRA = false
+
+    CACHE.SOCKET_CONNECT_TIMEOUT = 0.5
+
+    CACHE.COMMON.IS_CLUSTER = false
+    CACHE.COMMON.IS_SENTINEL = false
+    CACHE.COMMON.SENTINELS = [] # REDIS sentinel as JSON, example:'["127.0.0.1:26379","127.0.0.1:26380"]'
+    CACHE.COMMON.SENTINELS_MASTER_GROUP_NAME = ''
+    CACHE.COMMON.TTL = '10h'
+    CACHE.COMMON.URL = 'redis://redis:6379/1'
+    CACHE.COMMON.USE_ENCRYPTION.KEY = false
+    CACHE.COMMON.USE_ENCRYPTION.VALUE = false

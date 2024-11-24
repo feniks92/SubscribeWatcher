@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "service_trace"
+version = "0.1.0"
+description = "Tools to find leaks in service"
+authors = ["A.I.Zaboev <andrey.zaboev@rtlabs.ru>"]
+#readme = "README.md"
+packages = [{include = "tools"}]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+pyinstrument = "^4.5.1"
+aiomonitor = "^0.6.0"
+objgraph = "^3.6.0"
+web_service = {path = "../../libs/web_service", develop = true}
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

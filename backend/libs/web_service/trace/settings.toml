@@ -1,0 +1,4 @@
+dynaconf_merge = true
+
+[default]
+    PROFILING_CPU_ENABLED = true
