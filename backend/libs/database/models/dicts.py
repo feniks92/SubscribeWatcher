@@ -9,10 +9,6 @@ class BaseDictionaryModel(BaseModel):
     description: str = Field(title="Description")
 
 
-class UserType(BaseDictionaryModel):
-    pass
-
-
 class PaymentSystem(BaseDictionaryModel):
     active: bool = Field(title="Active")
 

@@ -9,22 +9,22 @@ class Channel(Base):
     __tablename__ = 'channel'
 
     id = Column(Integer, primary_key=True, index=True)
-    telegram_id = Column(Integer, unique=True, nullable=False, index=True)
+    telegram_id = Column(String, unique=True, nullable=False, index=True)
 
     owner_id = Column(Integer, ForeignKey('user_profile.id'), nullable=False)
-    owner = relationship('UserProfile', back_populates='channels_owner')
+    owner = relationship('UserProfile', back_populates='channels')
 
     admin_bot_id = Column(Integer, ForeignKey('user_profile.id'), nullable=False)
-    admin_bot = relationship('UserProfile', back_populates='channels_admin')
+    admin_bot = relationship('UserProfile', back_populates='channels')
 
     tariff_id = Column(Integer, ForeignKey('tariff.id'), nullable=False)
-    tariff = relationship('Tariff', back_populates='channels_tariff')
+    tariff = relationship('Tariff', back_populates='channels')
 
     payment_amount = Column(Integer, nullable=False, server_default='250')
     payment_destination = Column(String, nullable=False, server_default='')
 
     payment_system_id = Column(Integer, ForeignKey('payment_system.id'), nullable=False)
-    payment_system = relationship('PaymentSystem', back_populates='channels_payment_system')
+    payment_system = relationship('PaymentSystem', back_populates='channels')
 
     joined_at = Column('joined_at', DateTime, nullable=False, server_default=func.now())
     updated_at = Column('updated_at', DateTime, nullable=False,

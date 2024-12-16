@@ -2,7 +2,7 @@ from .channel import Channel  # noqa
 from .dicts import Tariff, PaymentSystem, UserType  # noqa
 from .payment import Payment  # noqa
 from .subscribe import Subscribe  # noqa
-from .user import User, UserProfile  # noqa
+from .user import User, UserProfile, ProfileTypes  # noqa
 
 
 def parse_id(id_: str) -> tuple:

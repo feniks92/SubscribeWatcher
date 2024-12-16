@@ -12,10 +12,6 @@ class Dictionary:
     description = Column(String, nullable=False, server_default='')
 
 
-class UserType(Dictionary, Base):
-    __tablename__ = 'user_type'
-
-
 class PaymentSystem(Dictionary, Base):
     __tablename__ = 'payment_system'
     __table_args__ = (

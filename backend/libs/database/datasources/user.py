@@ -1,6 +1,6 @@
 from sqlalchemy import update
 
-from libs.database.models import UserProfile, User
+from libs.database.models import UserProfile, User, ProfileTypes
 from libs.database import tables as db
 from .base import Base
 
@@ -8,6 +8,7 @@ from .base import Base
 class UserDatasource(Base):
     table_name = db.User
     model = User
+    _selectinload = (db.User.user_profile,)
 
     async def save(self,
                    user_tg_id: str,
@@ -31,6 +32,8 @@ class UserDatasource(Base):
                 )
             )
 
+        await self.session.commit()
+
         return self.model.model_validate(await self.get(user_tg_id=user_tg_id))
 
 
@@ -40,15 +43,17 @@ class UserProfileDatasource(Base):
 
     async def save(self,
                    user_id: int,
-                   profile_type_id: int):
-        existing_profile = await self.get(user_id=user_id, user_type_id=profile_type_id)
+                   profile_type: ProfileTypes) -> UserProfile:
+        existing_profile = await self.get(user_id=user_id, user_type=profile_type)
 
         if not existing_profile:
             self.session.add(
                 db.UserProfile(
                     user_id=user_id,
-                    user_type_id=profile_type_id
+                    user_type=profile_type
                 )
             )
 
         await self.session.commit()
+
+        return self.model.model_validate(await self.get(user_id=user_id, user_type=profile_type))
