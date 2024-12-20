@@ -7,7 +7,7 @@ from .channel import Channel
 from .user import UserProfile
 
 
-class Subscribe(BaseModel):
+class Subscription(BaseModel):
     id: str = Field(title='Идентификатор подписки')
     user_profile: UserProfile = Field(title='Профиль пользователя')
     channel: Channel = Field(title='Канал подписки')

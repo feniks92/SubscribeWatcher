@@ -8,8 +8,8 @@ from sqlalchemy.sql.schema import ForeignKey, Index
 from libs.database.tables.base import Base
 
 
-class Subscribe(Base):
-    __tablename__ = 'subscribe'
+class Subscription(Base):
+    __tablename__ = 'subscription'
 
     id = Column(UUID(as_uuid=True), primary_key=True, index=True, unique = True, default = uuid.uuid4)
 
