@@ -5,11 +5,14 @@ from sqlalchemy.sql.schema import ForeignKey, Index
 from libs.database.tables.base import Base
 
 
+#TODO добавить токен управления ботом. Продумать смену токена бота
 class Channel(Base):
     __tablename__ = 'channel'
 
     id = Column(Integer, primary_key=True, index=True)
     telegram_id = Column(String, unique=True, nullable=False, index=True)
+
+    name = Column(String, nullable=False)
 
     owner_id = Column(Integer, ForeignKey('user_profile.id'), nullable=False)
     owner = relationship('UserProfile', back_populates='channels')

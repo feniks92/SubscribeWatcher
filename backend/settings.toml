@@ -42,3 +42,14 @@ dynaconf_merge = true
     # TODO вынести логин с паролем в .secrets.toml
     DATABASE.USERNAME = 'postgres'
     DATABASE.PASSWORD = 'password'
+
+
+    LAVA_TOP.SERVICE_NAME = 'Lava top payment system service'
+    LAVA_TOP.METRICS_PREFIX = 'lava_top'
+    LAVA_TOP.TIMEOUT = 300
+    LAVA_TOP.BASE_URL = 'https://gate.lava.top/api/'
+    LAVA_TOP.PRODUCTS_URL = 'v2/products'
+    LAVA_TOP.INVOICE_URL = 'v2/invoice'
+    LAVA_TOP.CHECK_PAYMENT_URL = 'v1/invoice'
+    # TODO вынести в .secrets.toml
+    LAVA_TOP.API_KEY = ''

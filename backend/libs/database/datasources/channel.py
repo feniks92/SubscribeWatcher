@@ -20,6 +20,7 @@ class ChannelDatasource(Base):
                 update(db.Channel)
                 .where(db.Channel.id == channel.id)
                 .values(owner_id=channel.owner_id,
+                        name=channel.name,
                         owner=channel.owner,
                         admin_bot_id=channel.admin_bot_id,
                         admin_bot=channel.admin_bot,
@@ -56,6 +57,7 @@ class ChannelDatasource(Base):
 
     async def create_or_update_channel(self,
                                        telegram_id: str,
+                                       name: Optional[str] = None,
                                        owner_id: Optional[int] = None,
                                        admin_bot_id: Optional[int] = None,
                                        tariff_id: Optional[int,] = None,
@@ -67,6 +69,7 @@ class ChannelDatasource(Base):
 
         if channel:
             channel.owner_id = owner_id or channel.owner_id
+            channel.name = name or channel.name
             channel.admin_bot_id = admin_bot_id or channel.admin_bot_id
             channel.tariff_id = tariff_id or channel.tariff_id
             channel.payment_amount = payment_amount or channel.payment_amount
@@ -75,6 +78,7 @@ class ChannelDatasource(Base):
 
         if not channel:
             channel = db.Channel(telegram_id=telegram_id,
+                                 name=name,
                                  owner_id=owner_id,
                                  admin_bot_id=admin_bot_id,
                                  tariff_id=tariff_id,
