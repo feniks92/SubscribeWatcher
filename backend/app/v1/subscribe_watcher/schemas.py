@@ -8,6 +8,8 @@ from fastapi.exceptions import HTTPException
 
 from starlette import status
 
+from libs.database.tables.user_profile import UserType, BotType
+
 
 class UserInfo(BaseModel):
     first_name: str = Field(...)
@@ -28,14 +30,11 @@ class ParticipantsInfo:
 
 
 class AuthorizeResponse(BaseModel):
-    is_admin: bool = Field(False, alias='is_admin')
-    is_owner: bool = Field(False, alias='is_owner')
+    user_type: UserType = Field(...)
+    bot_type: BotType = Field(...)
 
 
-class ChannelResponse(BaseModel):
-    is_admin: bool = Field(False, alias='is_admin')
-    is_owner: bool = Field(False, alias='is_owner')
-    is_admin_bot: bool = Field(False, alias='is_bot_admin')
+class ProjectResponse(AuthorizeResponse):
     admin_bot_id: int = Field(..., alias='admin_bot_id')
     name: str = Field(..., alias='name')
     telegram_id: str = Field(..., alias='id')
@@ -43,5 +42,5 @@ class ChannelResponse(BaseModel):
 
 
 class SubscriptionInfoResponse(BaseModel):
-    tariffs: list[Tariff] = Field(..., alias='tariffs')
+    tariff: Tariff = Field(..., alias='tariffs')
     subscription_end: Optional[datetime] = Field(None, alias='subscription_end')

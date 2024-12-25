@@ -24,8 +24,8 @@ class PaymentSystem(Dictionary, Base):
     active = Column(Boolean, nullable=False, server_default=expression.true())
 
 
-class Tariff(Dictionary, Base):
-    __tablename__ = 'tariff'
+class GigaTariff(Dictionary, Base):
+    __tablename__ = 'giga_tariff'
     __table_args__ = (
         Index('ix_tariff_active', 'active'),
     )

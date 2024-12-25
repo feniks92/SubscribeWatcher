@@ -1,5 +1,5 @@
-from .channel import Channel  # noqa
-from .dicts import Tariff, PaymentSystem, UserType  # noqa
+from .project import Project  # noqa
+from .dicts import GigaTariff, PaymentSystem, UserType  # noqa
 from .payment import Payment  # noqa
 from .subscription import Subscription  # noqa
 from .user import User, UserProfile, ProfileTypes  # noqa

@@ -22,8 +22,8 @@ class AuthorizeHandler(BaseHandler):
         ...
 
 
-class ChannelHandler(BaseHandler):
-    metrics_prefix = 'channel'
+class ProjectHandler(BaseHandler):
+    metrics_prefix = 'project'
 
     async def handle(self, bg_tasks: BackgroundTasks):
         ...

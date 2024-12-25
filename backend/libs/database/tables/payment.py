@@ -19,13 +19,13 @@ class Payment(Base):
     user_id = Column(Integer, ForeignKey('user_profile.id'), nullable=False)
     user = relationship('UserProfile', back_populates='payments')
 
-    channel_id = Column(Integer, ForeignKey('channel.id'), nullable=False)
-    channel = relationship('Channel', back_populates='payments')
+    project_id = Column(Integer, ForeignKey('project.id'), nullable=False)
+    project = relationship('Project', back_populates='payments')
 
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
 
     __table_args__ = (
-        Index('ix_payment_updated_at_channel_id_status', updated_at, channel_id, status),
-        Index('ix_payment_user_id_channel_id', user_id, channel_id),
+        Index('ix_payment_updated_at_project_id_status', updated_at, project_id, status),
+        Index('ix_payment_user_id_project_id', user_id, project_id),
     )

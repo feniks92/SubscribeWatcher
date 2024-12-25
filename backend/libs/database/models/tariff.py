@@ -3,16 +3,11 @@ from pydantic import Field
 from .base import DatabaseBaseModel as BaseModel
 
 
-class BaseDictionaryModel(BaseModel):
+class TariffModel(BaseModel):
     id: int = Field(title="Id")
     name: str = Field(title="Name")
     description: str = Field(title="Description")
-
-
-class PaymentSystem(BaseDictionaryModel):
     active: bool = Field(title="Active")
-
-
-class GigaTariff(BaseDictionaryModel):
-    active: bool = Field(title="Active")
-    tariff_fee: float = Field(title="Fee")
+    project_id: int = Field(title="Project ID")
+    payment_amount: int = Field(title="Payment Amount")
+    subscribe_duration: int = Field(title="Subscribe Duration")

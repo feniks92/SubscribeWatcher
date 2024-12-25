@@ -16,8 +16,8 @@ class Subscription(Base):
     user_profile_id = Column(Integer, ForeignKey('user_profile.id'), nullable=False)
     user_profile = relationship('UserProfile', back_populates='subscribes')
 
-    channel_id = Column(Integer, ForeignKey('channel.id'), nullable=False)
-    channel = relationship('Channel', back_populates='subscribes')
+    project_id = Column(Integer, ForeignKey('project.id'), nullable=False)
+    project = relationship('Project', back_populates='subscribes')
 
     start_at = Column(DateTime(timezone=True), nullable=False, server_default=func.now())
     update_at = Column(DateTime(timezone=True), nullable=False, server_default=func.now(), onupdate=func.now())
@@ -26,5 +26,5 @@ class Subscription(Base):
     __table_args__ = (
         Index('ix_subscribe_update_at_end_at', update_at, end_at),
 
-        Index('ix_subscribe_channel_id_user_profile_id', channel_id, user_profile_id),
+        Index('ix_subscribe_project_id_user_profile_id', project_id, user_profile_id),
     )

@@ -6,11 +6,13 @@ from pydantic import Field
 from .base import DatabaseBaseModel as BaseModel
 
 
+# TODO переделать на единый енам с тем который в моделях. Н без циклического импорта
 class ProfileTypes(StrEnum):
+    GIGABOT = 'gigabot'  # Главный бот. Один на весь проект
     BOT = 'bot'
-    ADMIN = 'admin'
-    SUBSCRIBER = 'subscriber'
-    OWNER = 'owner'
+    GIGACHAD = 'gigachad'  # тот, кто может управлять главным ботом (суперюзер)
+    SUBSCRIBER = 'subscriber'  # тот, кто покупает подписки
+    OWNER = 'owner'  # администратор/владелец каналов, подботов
 
 
 class UserProfile(BaseModel):

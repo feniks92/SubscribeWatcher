@@ -34,14 +34,15 @@ class SubscriptionDatasource(Base):
         return model_object
 
     async def save_from_payment(self, payment: Payment) -> Subscription:
-        subscription = await self.get(user_profile_id=payment.user.id, channel_id=payment.channel.id)
+        subscription = await self.get(user_profile_id=payment.user.id, project_id=payment.project.id)
 
         if not subscription:
             subscription = db.Subscription(user_profile_id=payment.user.id,
-                                           channel_id=payment.channel.id,
+                                           project_id=payment.project.id,
                                            end_at=datetime.now())
 
-        subscription.end_at = max(payment.end_at, subscription.end_at) + relativedelta(months=1)
+        subscription.end_at = (max(payment.end_at, subscription.end_at) +
+                               relativedelta(months=payment.tariff.subscribe_duration))
 
         subscription_model = await self._save(subscription)
 

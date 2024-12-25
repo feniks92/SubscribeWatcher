@@ -3,8 +3,9 @@ from datetime import datetime
 from pydantic import Field
 
 from .base import DatabaseBaseModel as BaseModel
-from .channel import Channel
+from .project import Project
 from .user import UserProfile
+from .tariff import TariffModel
 
 
 class Payment(BaseModel):
@@ -12,6 +13,7 @@ class Payment(BaseModel):
     external_id: str = Field(title='External ID')
     status: str = Field(title='Payment status')
     user: UserProfile = Field(title='User Profile')
-    channel: Channel = Field(title='Channel')
+    project: Project = Field(title='Project')
     created_at: datetime = Field(title='Inserted at')
     updated_at: datetime = Field(title='Updated at')
+    tariff: TariffModel = Field(title='Tariff')
