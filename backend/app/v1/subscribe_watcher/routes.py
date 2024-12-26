@@ -5,9 +5,10 @@ from starlette.requests import Request
 
 from libs import logging
 from libs.database.sql_alchemy import pass_db_session, Session
+from libs.dependencies import ParticipantsInfo
 
 from .handler import AuthorizeHandler, ProjectHandler, SubscriptionHandler
-from .schemas import ProjectResponse, AuthorizeResponse, ParticipantsInfo, SubscriptionInfoResponse
+from .schemas import ProjectResponse, AuthorizeResponse, SubscriptionInfoResponse
 
 router = APIRouter(
     prefix="/subscribe",
@@ -28,8 +29,8 @@ async def authorize(
     handler = AuthorizeHandler(session=db_session,
                                participants=participants)
 
-    return AuthorizeResponse(roles= await handler.handle(bg_tasks=background_tasks))
-
+    user_type, bot_type = await handler.handle(bg_tasks=background_tasks)
+    return AuthorizeResponse(user_type=user_type, bot_type=bot_type)
 
 
 @router.get("/project", response_model=ProjectResponse)
@@ -54,6 +55,6 @@ async def projects_list(
         participants: ParticipantsInfo = Depends(ParticipantsInfo),
 ) -> SubscriptionInfoResponse:
     handler = SubscriptionHandler(session=db_session,
-                             participants=participants)
+                                  participants=participants)
 
     return await handler.handle(bg_tasks=background_tasks)

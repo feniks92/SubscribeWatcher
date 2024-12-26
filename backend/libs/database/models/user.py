@@ -30,7 +30,10 @@ class User(BaseModel):
     updated_at: datetime = Field(title='Updated at')
     user_profile: list[UserProfile] = Field((), title='User Profile')
 
-    def get_profile_by_type_name(self, profile_type_name):
+    def get_profile_by_type_name(self, profile_type_name: ProfileTypes = ProfileTypes.SUBSCRIBER):
         for profile in self.user_profile:
             if profile.user_type == profile_type_name:
                 return profile
+
+    def get_all_user_profiles_names(self):
+        return [profile.user_type for profile in self.user_profile]
