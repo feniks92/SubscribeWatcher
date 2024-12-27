@@ -10,6 +10,8 @@ from libs.dependencies import ParticipantsInfo
 from .handler import AuthorizeHandler, ProjectHandler, SubscriptionHandler
 from .schemas import ProjectResponse, AuthorizeResponse, SubscriptionInfoResponse
 
+log = logging.getLogger('watcher_handler')
+
 router = APIRouter(
     prefix="/subscribe",
     tags=["subscribe_watcher"],
@@ -33,7 +35,7 @@ async def authorize(
     return AuthorizeResponse(user_type=user_type, bot_type=bot_type)
 
 
-@router.get("/project", response_model=ProjectResponse)
+@router.get("/projects", response_model=ProjectResponse)
 async def projects_list(
         request: Request,
         background_tasks: BackgroundTasks,

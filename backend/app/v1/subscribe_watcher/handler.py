@@ -1,5 +1,3 @@
-from typing import Optional, Type
-
 from fastapi import BackgroundTasks
 
 from libs import logging
@@ -9,6 +7,7 @@ from libs.database.models import User, ProfileTypes
 from libs.dependencies import ParticipantsInfo
 
 log = logging.getLogger('watcher_handler')
+
 
 class BaseHandler:
     user: User | None = None
@@ -22,16 +21,30 @@ class BaseHandler:
         self.user = await UserDatasource(self.session).get(user_tg_id=self.participants.user.telegram_id)
         self.bot = await UserDatasource(self.session).get(user_tg_id=self.participants.bot_id)
 
+    def user_owner_profile(self):
+        if self.bot and self.user:
+            return self.user.get_profile_by_type_name(
+                ProfileTypes.OWNER).user_is_project_owner(self.bot.user_profile[0].projects[0])
 
+    def user_gigachad_profile(self):
+        if self.bot and self.user:
+            return self.user.get_profile_by_type_name(ProfileTypes.GIGACHAD)
+
+
+# TODO пока не придумал что делать если пришли с бота, которого у нас нет.
+# Этот случай будет возвращать тип пользователя None и тип бота None
 class AuthorizeHandler(BaseHandler):
     metrics_prefix = 'authorize'
 
     async def handle(self, bg_tasks: BackgroundTasks):
         await self.get_roles()
-        user_types = self.user.get_all_user_profiles_names()
-        bot_types = self.bot.get_all_user_profiles_names()
-        bot_types = ProfileTypes.GIGABOT if ProfileTypes.GIGABOT in bot_types else ProfileTypes.BOT
-        return user_types, bot_types
+
+        prof = self.user_gigachad_profile() or self.user_owner_profile()
+        user_type = prof.user_type
+
+        bot_type = self.bot.get_all_user_profiles_names()
+        bot_type = ProfileTypes.GIGABOT if ProfileTypes.GIGABOT in bot_type else ProfileTypes.BOT
+        return user_type, bot_type
 
 
 class ProjectHandler(BaseHandler):
@@ -39,6 +52,9 @@ class ProjectHandler(BaseHandler):
 
     async def handle(self, bg_tasks: BackgroundTasks):
         await self.get_roles()
+
+        if prof := self.user_owner_profile():
+            return prof.projects
 
 
 class SubscriptionHandler(BaseHandler):

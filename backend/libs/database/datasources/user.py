@@ -8,7 +8,7 @@ from .base import Base
 class UserDatasource(Base):
     table_name = db.User
     model = User
-    _selectinload = (db.User.user_profile,)
+    _selectinload = (db.User.user_profile, db.User.user_profile.projects)  # подтягивать проекты
 
     async def save(self,
                    user_tg_id: str,
@@ -27,7 +27,6 @@ class UserDatasource(Base):
         else:
             self.session.add(
                 self.table_name(
-                    user_tg_id=user_tg_id,
                     settings=settings
                 )
             )
