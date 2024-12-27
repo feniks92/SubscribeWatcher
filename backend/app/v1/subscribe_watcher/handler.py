@@ -1,9 +1,11 @@
+from typing import Optional
+
 from fastapi import BackgroundTasks
 
 from libs import logging
 from libs.database.sql_alchemy import Session
 from libs.database.datasources.user import UserDatasource
-from libs.database.models import User, ProfileTypes
+from libs.database.models import User, ProfileTypes, UserProfile, Subscription
 from libs.dependencies import ParticipantsInfo
 
 log = logging.getLogger('watcher_handler')
@@ -21,12 +23,19 @@ class BaseHandler:
         self.user = await UserDatasource(self.session).get(user_tg_id=self.participants.user.telegram_id)
         self.bot = await UserDatasource(self.session).get(user_tg_id=self.participants.bot_id)
 
-    def user_owner_profile(self):
+    def user_owner_profile(self) -> Optional[UserProfile]:
         if self.bot and self.user:
-            return self.user.get_profile_by_type_name(
-                ProfileTypes.OWNER).user_is_project_owner(self.bot.user_profile[0].projects[0])
+            prof =  self.user.get_profile_by_type_name(ProfileTypes.OWNER)
 
-    def user_gigachad_profile(self):
+            if prof.user_is_project_owner(self.bot.user_profile[0].projects[0]):
+                return prof
+
+    def user_subscription(self) -> Optional[Subscription]:
+        if self.bot and self.user:
+            return self.user.get_profile_by_type_name().user_project_subscription(
+                project_id=self.bot.user_profile[0].projects[0].id)
+
+    def user_gigachad_profile(self)-> Optional[UserProfile]:
         if self.bot and self.user:
             return self.user.get_profile_by_type_name(ProfileTypes.GIGACHAD)
 
@@ -61,4 +70,7 @@ class SubscriptionHandler(BaseHandler):
     metrics_prefix = 'subscription'
 
     async def handle(self, bg_tasks: BackgroundTasks):
-        ...
+        await self.get_roles()
+
+        if subscription := self.user_subscription():
+            return subscription.end_at

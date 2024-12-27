@@ -1,10 +1,12 @@
 from datetime import datetime
 from enum import StrEnum
+from typing import Optional
 
 from pydantic import Field
 
 from .base import DatabaseBaseModel as BaseModel
 from .project import Project
+from .subscription import Subscription
 
 
 # TODO переделать на единый енам с тем который в моделях. Н без циклического импорта
@@ -21,7 +23,8 @@ class UserProfile(BaseModel):
     user_type: str = Field(title='User type')
     inserted_at: datetime = Field(title="Inserted At")
     updated_at: datetime = Field(title="Updated At")
-    projects: list[Project] = Field(title='User projects')
+    projects: Optional[list[Project]] = Field(default_factory=list, title='User projects')
+    subscriptions: Optional[list[Subscription]] = Field(default_factory=list, title='User subscriptions')
 
     # TODO need refactor
     def user_is_project_owner(self, project: Project) -> bool:
@@ -29,6 +32,11 @@ class UserProfile(BaseModel):
             if proj.id == project.id:
                 return True
         return False
+
+    def user_project_subscription(self, project_id: int) -> Optional[Subscription]:
+        for subscription in self.subscriptions:
+            if subscription.id == project_id:
+                return subscription
 
 
 class User(BaseModel):

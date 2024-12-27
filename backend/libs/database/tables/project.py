@@ -6,6 +6,7 @@ from libs.database.tables.base import Base
 
 
 # TODO добавить токен управления ботом. Продумать смену токена бота
+# TODO сделать имена проектов уникальными в пределах одного пользователя
 class Project(Base):
     __tablename__ = 'project'
 
