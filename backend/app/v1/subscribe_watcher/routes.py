@@ -48,9 +48,19 @@ async def projects_list(
     return await handler.handle(bg_tasks=background_tasks)
 
 
-#  Ручка для получения текущих подписок пользователя
+@router.get("/tariffs", response_model=TariffsInfoResponse)
+async def tariffs_list(
+        request: Request,
+        background_tasks: BackgroundTasks,
+        project_info: TariffRequest,
+        db_session: Session = Depends(pass_db_session),
+        participants: ParticipantsInfo = Depends(ParticipantsInfo), ) -> TariffsInfoResponse:
+    ...
+
+
+# Ручка для получения текущих подписок пользователя
 @router.get("/subscription", response_model=SubscriptionInfoResponse)
-async def projects_list(
+async def subscription_info(
         request: Request,
         background_tasks: BackgroundTasks,
         db_session: Session = Depends(pass_db_session),
