@@ -38,6 +38,11 @@ class UserProfile(BaseModel):
             if subscription.id == project_id:
                 return subscription
 
+    def user_get_project_by_id(self, project_id: int) -> Optional[Project]:
+        for proj in self.projects:
+            if proj.id == project_id:
+                return proj
+
 
 class User(BaseModel):
     id: int = Field(title='User inner Id')
