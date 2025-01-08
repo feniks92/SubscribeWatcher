@@ -3,6 +3,7 @@ from .dicts import GigaTariff, PaymentSystem, UserType  # noqa
 from .payment import Payment  # noqa
 from .subscription import Subscription  # noqa
 from .user import User, UserProfile, ProfileTypes  # noqa
+from .tariff import TariffModel  # noqa
 
 
 def parse_id(id_: str) -> tuple:

@@ -1,12 +1,13 @@
 import abc
+from collections.abc import Sequence
 from typing import Any, Iterable, Optional, TypeVar
 
 import pydantic
 import sqlalchemy
 from pydantic import BaseModel
-from sqlalchemy import and_, select
+from sqlalchemy import and_, select, insert
 from sqlalchemy.orm import Session, selectinload
-from sqlalchemy.sql import Select
+from sqlalchemy.sql import Select, Insert
 
 from libs.database.sql_alchemy import get_db_session
 
@@ -114,6 +115,25 @@ class Base:
                 join = selectinload(item)
             query = query.options(join)
         return query
+
+    def _build_insert(self, items: Sequence[dict], return_inserted) -> Insert:
+        for item in items:
+            self._check_filter_keys(item.keys())
+
+        query = insert(self.table)
+        if return_inserted:
+            query = query.returning(self.table)
+        return query
+
+    async def _bulk_insert(self, query: Insert, items: Sequence[dict], raw: bool = False) -> list[MT]:
+        result = self.session.scalars(query, items)
+
+        if raw:
+            return result.all()
+        return [self._transform(item) for (item,) in result.all()]
+
+    async def bulk_insert(self, items: Sequence[dict], return_inserted=True, raw: bool = False) -> list[MT]:
+        return await self._bulk_insert(self._build_insert(items, return_inserted), items, raw)
 
 
 class Joinable(Base):

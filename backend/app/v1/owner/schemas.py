@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, asdict
 from typing import Optional
 
 from fastapi import Body
@@ -32,6 +32,12 @@ class TariffResponse(AuthorizeItem, TariffItem):
                                  examples=['698c6fc1-b284-4f4b-b9a6-f317b1bf0811'], alias='rqId')
 
 
+class TariffListResponse(AuthorizeItem):
+    rq_id: Optional[str] = Field(None, description='Идентификатор запроса',
+                                 examples=['698c6fc1-b284-4f4b-b9a6-f317b1bf0811'], alias='rqId')
+    tariffs: Optional[list[TariffItem]] = Field(default_factory=list, alias='tariffs')
+
+
 @dataclass
 class ProjectRequest:
     name: str = Body(..., alias='name')
@@ -45,3 +51,18 @@ class GigaTariffListResponse(AuthorizeItem):
     rq_id: Optional[str] = Field(None, description='Идентификатор запроса',
                                  examples=['698c6fc1-b284-4f4b-b9a6-f317b1bf0811'], alias='rqId')
     tariffs: list[GigaTariffItem] = Field(default_factory=list, alias='tariff')
+
+
+@dataclass
+class TariffRequest:
+    name: str = Body(..., alias='name')
+    description: str = Body(..., alias='description')
+    payment_amount: int = Body(..., alias='paymentAmount')
+    subscribe_duration: int = Body(..., alias='subscribeDuration', description='Subscribe Duration in months')
+
+    dict = asdict
+
+
+@dataclass
+class TariffListRequest:
+    tariffs: list[TariffRequest] = Body(..., alias='tariffs')

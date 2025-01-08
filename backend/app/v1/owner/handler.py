@@ -5,10 +5,11 @@ from libs import logging
 from app.v1.general.handler import BaseHandler
 from libs.database.models import Project
 from libs.database.datasources.project import ProjectDatasource
+from libs.database.datasources.tariff import TariffDatasource
 from libs.database.datasources.dicts import GigaTariffDatasource
 from libs.database.datasources.user import UserDatasource, UserProfileDatasource
 from libs.database.models.user import ProfileTypes
-from .schemas import GigaTariffItem, ProjectRequest
+from .schemas import GigaTariffItem, ProjectRequest, TariffItem, TariffListRequest
 
 log = logging.getLogger('owner_handler')
 
@@ -16,13 +17,13 @@ log = logging.getLogger('owner_handler')
 class ProjectHandler(BaseHandler):
     metrics_prefix = 'project'
 
-    async def handle(self, bg_tasks: BackgroundTasks):
+    async def get_all(self, bg_tasks: BackgroundTasks):
         await self.get_roles()
 
         if prof := self.user_owner_profile():
             return prof.projects
 
-    async def handle_one(self, bg_tasks: BackgroundTasks, project_id: int) -> Project | HTTPException:
+    async def get_one(self, bg_tasks: BackgroundTasks, project_id: int) -> Project | HTTPException:
         await self.get_roles()
         if prof := self.user_owner_profile():
             return prof.user_get_project_by_id(project_id)
@@ -70,3 +71,24 @@ class TariffHandler(BaseHandler):
         await self.get_roles()
 
         return await GigaTariffDatasource(session=self.session).get_all()
+
+    async def insert_tariffs(
+            self, bg_tasks: BackgroundTasks,
+            tariffs_list_data: TariffListRequest,
+            project_id: int
+    ) -> list[TariffItem]:
+        await self.get_roles()
+        if not (prof := self.user_owner_profile()):
+            raise HTTPException(status_code=401, detail='Not enough permission')
+        if not (project := prof.user_get_project_by_id(project_id)):
+            raise HTTPException(status_code=401, detail='Not enough permission')
+
+        tariffs = []
+
+        for tariff in tariffs_list_data.tariffs:
+            tmp_tariff = tariff.dict()
+            tmp_tariff['project_id'] = project_id
+            tariffs.append(tmp_tariff)
+
+        result = await TariffDatasource(session=self.session).bulk_insert(tariffs)
+
