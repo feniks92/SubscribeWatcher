@@ -40,6 +40,10 @@ class BaseHandler:
         if self.bot and self.user:
             return self.user.get_profile_by_type_name(ProfileTypes.GIGACHAD)
 
+    def gigabot_profile(self) -> Optional[UserProfile]:
+        if self.bot:
+            return self.bot.get_profile_by_type_name(ProfileTypes.GIGABOT)
+
 
 # TODO пока не придумал что делать если пришли с бота, которого у нас нет.
 # Этот случай будет возвращать тип пользователя None и тип бота None
@@ -55,4 +59,3 @@ class AuthorizeHandler(BaseHandler):
         bot_type = self.bot.get_all_user_profiles_names()
         bot_type = ProfileTypes.GIGABOT if ProfileTypes.GIGABOT in bot_type else ProfileTypes.BOT
         return user_type, bot_type
-

@@ -9,7 +9,7 @@ from .project import Project
 from .subscription import Subscription
 
 
-# TODO переделать на единый енам с тем который в моделях. Н без циклического импорта
+# TODO переделать на единый енам с тем который в моделях. Но без циклического импорта
 class ProfileTypes(StrEnum):
     GIGABOT = 'gigabot'  # Главный бот. Один на весь проект
     BOT = 'bot'

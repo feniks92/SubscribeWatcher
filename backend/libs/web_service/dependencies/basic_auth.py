@@ -32,4 +32,4 @@ class BasicAuthSecurity(HTTPBasic):
         return
 
 
-basic_auth_security = Depends(BasicAuthSecurity(auto_error=False))
+# basic_auth_security = Depends(BasicAuthSecurity(auto_error=False))

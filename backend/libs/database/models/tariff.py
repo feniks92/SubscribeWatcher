@@ -10,4 +10,4 @@ class TariffModel(BaseModel):
     active: bool = Field(title="Active")
     project_id: int = Field(title="Project ID")
     payment_amount: int = Field(title="Payment Amount")
-    subscribe_duration: int = Field(title="Subscribe Duration")
+    subscribe_duration: int = Field(title="Subscribe Duration in months")

@@ -27,6 +27,7 @@ class UserDatasource(Base):
         else:
             self.session.add(
                 self.table_name(
+                    user_tg_id=user_tg_id,
                     settings=settings
                 )
             )

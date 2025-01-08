@@ -56,29 +56,25 @@ class ProjectDatasource(Base):
         return await self._save(project=project)
 
     async def create_or_update_project(self,
-                                       telegram_id: str,
                                        name: Optional[str] = None,
                                        owner_id: Optional[int] = None,
                                        admin_bot_id: Optional[int] = None,
                                        tariff_id: Optional[int,] = None,
-                                       payment_amount: Optional[int] = None,
                                        payment_destination: Optional[str] = None,
                                        payment_system_id: Optional[int] = None) -> Project:
 
-        project = await self.get(telegram_id=telegram_id)
+        project = await self.get(name=name, owner_id=owner_id)
 
         if project:
             project.owner_id = owner_id or project.owner_id
             project.name = name or project.name
             project.admin_bot_id = admin_bot_id or project.admin_bot_id
             project.tariff_id = tariff_id or project.tariff_id
-            project.payment_amount = payment_amount or project.payment_amount
             project.payment_destination = payment_destination or project.payment_destination
             project.payment_system_id = payment_system_id or project.payment_system_id
 
         if not project:
-            project = db.Project(telegram_id=telegram_id,
-                                 name=name,
+            project = db.Project(name=name,
                                  owner_id=owner_id,
                                  admin_bot_id=admin_bot_id,
                                  tariff_id=tariff_id,
