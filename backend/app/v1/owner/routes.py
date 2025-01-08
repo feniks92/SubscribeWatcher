@@ -28,7 +28,8 @@ router = APIRouter(
         создаем тарифы для уже для проекта, которые на месяц, 3 месяца, и т.д. (POST /projects/{project_id}/tariffs)
         
     Если проекты есть -> 
-        меняем тариф (POST /projects/{project_id}/tariff)
+        получаем тарифы (GET /projects/{project_id}/tariffs)
+        меняем тариф (POST /projects/{project_id}/tariff/{tariff_id})
         меняем проект (POST /projects/{project_id})
     
 Дополнительно есть возможность получить инфу по конкретному проекту (GET /projects/{project_id}) 
@@ -120,6 +121,21 @@ async def owner_projects_tariffs(
                                   bg_tasks=background_tasks,
                                   tariffs_list_data=tariffs_list_data,
                                   project_id=project_id))
+
+
+@router.get("/projects/{project_id}/tariffs", response_model=TariffListResponse)
+async def owner_projects_update(
+        project_id: int,
+        request: Request,
+        background_tasks: BackgroundTasks,
+        db_session: Session = Depends(pass_db_session),
+        participants: ParticipantsInfo = Depends(ParticipantsInfo)
+) -> TariffListResponse:
+    handler = TariffHandler(session=db_session,
+                            participants=participants)
+
+    return TariffListResponse(rqId=get_request_id(),
+                              tariffs=await handler.get_tariffs(bg_tasks=background_tasks, project_id=project_id))
 
 
 @router.get("/projects/giga_tariffs", response_model=GigaTariffListResponse)

@@ -90,5 +90,18 @@ class TariffHandler(BaseHandler):
             tmp_tariff['project_id'] = project_id
             tariffs.append(tmp_tariff)
 
-        result = await TariffDatasource(session=self.session).bulk_insert(tariffs)
+        return await TariffDatasource(session=self.session).bulk_insert(tariffs)
+
+    async def get_tariffs(self,
+                          bg_tasks: BackgroundTasks,
+                          project_id: int
+    ):
+        await self.get_roles()
+        if not (prof := self.user_owner_profile()):
+            raise HTTPException(status_code=401, detail='Not enough permission')
+        if not (project := prof.user_get_project_by_id(project_id)):
+            raise HTTPException(status_code=401, detail='Not enough permission')
+
+        return project.tariffs
+
 
