@@ -9,7 +9,7 @@ from libs.web_service.middleware.headers_parser import get_request_id
 
 from .handler import ProjectHandler, TariffHandler
 from .schemas import (ProjectListResponse, ProjectResponse, GigaTariffListResponse, TariffResponse,
-                      ProjectRequest, TariffListRequest, TariffListResponse)
+                      ProjectRequest, TariffListRequest, TariffListResponse, TariffRequest)
 
 log = logging.getLogger('owner_handler')
 
@@ -96,11 +96,21 @@ async def owner_projects_get(
 async def owner_projects_update(
         project_id: int,
         request: Request,
+        project_data: ProjectRequest,
         background_tasks: BackgroundTasks,
         db_session: Session = Depends(pass_db_session),
         participants: ParticipantsInfo = Depends(ParticipantsInfo)
 ) -> ProjectResponse:
-    ...
+    handler = ProjectHandler(session=db_session,
+                             participants=participants)
+
+    result = await handler.update(bg_tasks=background_tasks, project_id=project_id, project_data=project_data)
+
+    return ProjectResponse(rqId=get_request_id(),
+                           admin_bot_id=result.admin_bot_id,
+                           name=result.name,
+                           tariffs=result.tariffs,
+                           )
 
 
 #  Add tariffs for project
@@ -123,8 +133,28 @@ async def owner_projects_tariffs(
                                   project_id=project_id))
 
 
+@router.post("/projects/{project_id}/tariff/{tariff_id}", response_model=TariffResponse)
+async def owner_project_tariff_update(
+        project_id: int,
+        tariff_id: int,
+        request: Request,
+        tariff_data: TariffRequest,
+        background_tasks: BackgroundTasks,
+        db_session: Session = Depends(pass_db_session),
+        participants: ParticipantsInfo = Depends(ParticipantsInfo)
+) -> TariffResponse:
+    handler = TariffHandler(session=db_session,
+                            participants=participants)
+
+    updated_tariff = await handler.update_tariff(bg_tasks=background_tasks, project_id=project_id,
+                                                 tariff_id=tariff_id, tariff_data=tariff_data)
+
+    return TariffResponse(rqId=get_request_id(),
+                          **updated_tariff.as_dict())
+
+
 @router.get("/projects/{project_id}/tariffs", response_model=TariffListResponse)
-async def owner_projects_update(
+async def owner_projects_tariffs_get(
         project_id: int,
         request: Request,
         background_tasks: BackgroundTasks,

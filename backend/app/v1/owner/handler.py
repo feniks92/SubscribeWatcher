@@ -3,13 +3,13 @@ from fastapi import BackgroundTasks, HTTPException
 from libs import logging
 
 from app.v1.general.handler import BaseHandler
-from libs.database.models import Project
+from libs.database.models import Project, TariffModel
 from libs.database.datasources.project import ProjectDatasource
 from libs.database.datasources.tariff import TariffDatasource
 from libs.database.datasources.dicts import GigaTariffDatasource
 from libs.database.datasources.user import UserDatasource, UserProfileDatasource
 from libs.database.models.user import ProfileTypes
-from .schemas import GigaTariffItem, ProjectRequest, TariffItem, TariffListRequest
+from .schemas import GigaTariffItem, ProjectRequest, TariffItem, TariffListRequest, TariffRequest
 
 log = logging.getLogger('owner_handler')
 
@@ -63,6 +63,27 @@ class ProjectHandler(BaseHandler):
             payment_system_id=project_data.payment_system_id,
         )
 
+    async def update(self, bg_tasks: BackgroundTasks, project_id, project_data: ProjectRequest) -> Project:
+        await self.get_roles()
+
+        if not (bot_prof := self.gigabot_profile()):
+            raise HTTPException(status_code=401, detail='Your bot have not enough permission')
+
+        if not (prof := self.user_owner_profile()):
+            raise HTTPException(status_code=401, detail='You have not enough permission')
+
+        if not (project := prof.user_get_project_by_id(project_id)):
+            raise HTTPException(status_code=401, detail='Not enough permission')
+
+        return await ProjectDatasource(session=self.session).update_by_id(
+            project_id=project_id,
+            name=project_data.name,
+            admin_bot_id=project_data.admin_bot_id,
+            tariff_id=project_data.tariff_id,
+            payment_destination=project_data.payment_destination,
+            payment_system_id=project_data.payment_system_id,
+        )
+
 
 class TariffHandler(BaseHandler):
     metrics_prefix = 'tariff'
@@ -72,11 +93,8 @@ class TariffHandler(BaseHandler):
 
         return await GigaTariffDatasource(session=self.session).get_all()
 
-    async def insert_tariffs(
-            self, bg_tasks: BackgroundTasks,
-            tariffs_list_data: TariffListRequest,
-            project_id: int
-    ) -> list[TariffItem]:
+    async def insert_tariffs(self, bg_tasks: BackgroundTasks,
+                             tariffs_list_data: TariffListRequest, project_id: int) -> list[TariffItem]:
         await self.get_roles()
         if not (prof := self.user_owner_profile()):
             raise HTTPException(status_code=401, detail='Not enough permission')
@@ -92,10 +110,7 @@ class TariffHandler(BaseHandler):
 
         return await TariffDatasource(session=self.session).bulk_insert(tariffs)
 
-    async def get_tariffs(self,
-                          bg_tasks: BackgroundTasks,
-                          project_id: int
-    ):
+    async def get_tariffs(self, bg_tasks: BackgroundTasks, project_id: int) -> list[TariffModel]:
         await self.get_roles()
         if not (prof := self.user_owner_profile()):
             raise HTTPException(status_code=401, detail='Not enough permission')
@@ -104,4 +119,19 @@ class TariffHandler(BaseHandler):
 
         return project.tariffs
 
+    async def update_tariff(self, bg_tasks: BackgroundTasks, project_id: int,
+                            tariff_id: int, tariff_data: TariffRequest) -> TariffModel:
 
+        await self.get_roles()
+        if not (prof := self.user_owner_profile()):
+            raise HTTPException(status_code=401, detail='Not enough permission')
+        if not (project := prof.user_get_project_by_id(project_id)):
+            raise HTTPException(status_code=401, detail='Not enough permission')
+
+        return await TariffDatasource(session=self.session).update_tariff(
+            tariff_id=tariff_id,
+            name=tariff_data.name,
+            description=tariff_data.description,
+            payment_amount=tariff_data.payment_amount,
+            subscribe_duration=tariff_data.subscribe_duration
+        )

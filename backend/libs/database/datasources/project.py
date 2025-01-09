@@ -55,13 +55,13 @@ class ProjectDatasource(Base):
 
         return await self._save(project=project)
 
-    async def create_or_update_project(self,
-                                       name: Optional[str] = None,
-                                       owner_id: Optional[int] = None,
-                                       admin_bot_id: Optional[int] = None,
-                                       tariff_id: Optional[int,] = None,
-                                       payment_destination: Optional[str] = None,
-                                       payment_system_id: Optional[int] = None) -> Project:
+    async def create_or_update_project_by_name(self,
+                                               name: str,
+                                               owner_id: int,
+                                               admin_bot_id: Optional[int] = None,
+                                               tariff_id: Optional[int,] = None,
+                                               payment_destination: Optional[str] = None,
+                                               payment_system_id: Optional[int] = None) -> Project:
 
         project = await self.get(name=name, owner_id=owner_id)
 
@@ -80,6 +80,30 @@ class ProjectDatasource(Base):
                                  tariff_id=tariff_id,
                                  payment_destination=payment_destination,
                                  payment_system_id=payment_system_id)
+
+        project_model = await self._save(project=project)
+
+        return project_model
+
+    async def update_by_id(self,
+                           project_id: int,
+                           name: Optional[str] = None,
+                           admin_bot_id: Optional[int] = None,
+                           tariff_id: Optional[int] = None,
+                           payment_destination: Optional[str] = None,
+                           payment_system_id: Optional[int] = None
+                           ) -> Project | None:
+
+        project = await self.get(id=project_id)
+
+        if not project:
+            return None
+
+        project.name = name or project.name
+        project.admin_bot_id = admin_bot_id or project.admin_bot_id
+        project.tariff_id = tariff_id or project.tariff_id
+        project.payment_destination = payment_destination or project.payment_destination
+        project.payment_system_id = payment_system_id or project.payment_system_id
 
         project_model = await self._save(project=project)
 

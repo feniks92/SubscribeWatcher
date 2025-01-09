@@ -40,9 +40,9 @@ class TariffListResponse(AuthorizeItem):
 
 @dataclass
 class ProjectRequest:
-    name: str = Body(..., alias='name')
-    payment_system_id: int = Body(..., alias='payment_system_id')
-    tariff_id: int = Body(..., alias='tariff_id')
+    name: Optional[str] = Body('', alias='name')
+    payment_system_id: Optional[int] = Body(0, alias='payment_system_id')
+    tariff_id: Optional[int] = Body(0, alias='tariff_id')
     admin_bot_id: Optional[int] = Body(None, alias='admin_bot_id')
     payment_destination: Optional[str] = Body(None, alias='payment_destination')
 
@@ -55,10 +55,11 @@ class GigaTariffListResponse(AuthorizeItem):
 
 @dataclass
 class TariffRequest:
-    name: str = Body(..., alias='name')
-    description: str = Body(..., alias='description')
-    payment_amount: int = Body(..., alias='paymentAmount')
-    subscribe_duration: int = Body(..., alias='subscribeDuration', description='Subscribe Duration in months')
+    name: Optional[str] = Body('', alias='name')
+    description: Optional[str] = Body(..., alias='description')
+    payment_amount: Optional[int] = Body(250, alias='paymentAmount')
+    subscribe_duration: Optional[int] = Body(1, alias='subscribeDuration',
+                                             description='Subscribe Duration in months')
 
     dict = asdict
 

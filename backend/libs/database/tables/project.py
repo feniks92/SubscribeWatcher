@@ -23,6 +23,8 @@ class Project(Base):
     tariff_id = Column(Integer, ForeignKey('giga_tariff.id'), nullable=False)
     tariff = relationship('GigaTariff', back_populates='projects')
 
+    tariffs = relationship('Tariff', back_populates='project')
+
     payment_destination = Column(String, nullable=False, server_default='')
 
     payment_system_id = Column(Integer, ForeignKey('payment_system.id'), nullable=False)
