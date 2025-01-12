@@ -5,11 +5,12 @@ from starlette.requests import Request
 from libs import logging
 from libs.database.sql_alchemy import pass_db_session, Session
 from libs.dependencies import ParticipantsInfo
+from libs.shared import TariffListResponse
 from libs.web_service.middleware.headers_parser import get_request_id
 
 from .handler import ProjectHandler, TariffHandler
 from .schemas import (ProjectListResponse, ProjectResponse, GigaTariffListResponse, TariffResponse,
-                      ProjectRequest, TariffListRequest, TariffListResponse, TariffRequest)
+                      ProjectRequest, TariffListRequest, TariffRequest)
 
 log = logging.getLogger('owner_handler')
 

@@ -33,7 +33,7 @@ class BaseHandler:
 
     def user_subscription(self) -> Optional[Subscription]:
         if self.bot and self.user:
-            return self.user.get_profile_by_type_name().user_project_subscription(
+            return self.user.get_profile_by_type_name(ProfileTypes.SUBSCRIBER).user_project_subscription(
                 project_id=self.bot.user_profile[0].projects[0].id)
 
     def user_gigachad_profile(self) -> Optional[UserProfile]:

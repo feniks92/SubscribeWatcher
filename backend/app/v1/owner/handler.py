@@ -9,7 +9,9 @@ from libs.database.datasources.tariff import TariffDatasource
 from libs.database.datasources.dicts import GigaTariffDatasource
 from libs.database.datasources.user import UserDatasource, UserProfileDatasource
 from libs.database.models.user import ProfileTypes
-from .schemas import GigaTariffItem, ProjectRequest, TariffItem, TariffListRequest, TariffRequest
+from libs.shared import GigaTariffItem, TariffItem
+
+from .schemas import ProjectRequest, TariffListRequest, TariffRequest
 
 log = logging.getLogger('owner_handler')
 
@@ -98,7 +100,7 @@ class TariffHandler(BaseHandler):
         await self.get_roles()
         if not (prof := self.user_owner_profile()):
             raise HTTPException(status_code=401, detail='Not enough permission')
-        if not (project := prof.user_get_project_by_id(project_id)):
+        if not (prof.user_get_project_by_id(project_id)):
             raise HTTPException(status_code=401, detail='Not enough permission')
 
         tariffs = []

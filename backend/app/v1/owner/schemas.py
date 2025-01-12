@@ -4,9 +4,9 @@ from typing import Optional
 from fastapi import Body
 from pydantic import BaseModel, Field
 
-from app.v1.general.schemas import TariffItem, GigaTariffItem
+from libs.shared import GigaTariffItem, TariffItem
 
-from libs.authorize.schemas import AuthorizeItem
+from libs.shared import AuthorizeItem
 
 
 class ProjectItem(BaseModel):
@@ -30,12 +30,6 @@ class ProjectListResponse(AuthorizeItem):
 class TariffResponse(AuthorizeItem, TariffItem):
     rq_id: Optional[str] = Field(None, description='Идентификатор запроса',
                                  examples=['698c6fc1-b284-4f4b-b9a6-f317b1bf0811'], alias='rqId')
-
-
-class TariffListResponse(AuthorizeItem):
-    rq_id: Optional[str] = Field(None, description='Идентификатор запроса',
-                                 examples=['698c6fc1-b284-4f4b-b9a6-f317b1bf0811'], alias='rqId')
-    tariffs: Optional[list[TariffItem]] = Field(default_factory=list, alias='tariffs')
 
 
 @dataclass
