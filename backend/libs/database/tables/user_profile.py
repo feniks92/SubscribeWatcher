@@ -36,6 +36,7 @@ class UserProfile(Base):
     user = relationship('User', back_populates='user_profile')
 
     user_type = Column(String, nullable=False)
+    projects = relationship('Project', back_populates='user_profile')
 
     inserted_at = Column('inserted_at', DateTime(timezone=True), nullable=False, server_default=func.now())
     updated_at = Column('updated_at', DateTime(timezone=True), nullable=False,

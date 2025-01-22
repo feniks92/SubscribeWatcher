@@ -8,7 +8,7 @@ from libs.database.tables.base import Base
 
 
 class Tariff(Base):
-    _tablename__ = 'tariff'
+    __tablename__ = 'tariff'
     __table_args__ = (
         Index('ix_project_id_tariff_active', 'project_id', 'active'),
     )

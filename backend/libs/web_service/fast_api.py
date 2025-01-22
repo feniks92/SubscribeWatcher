@@ -27,7 +27,7 @@ def create_fast_api_app(config: Union[AppConfig, SubAppConfig], **fast_api_setti
     readable_app_name = config.APP_NAME.translate({ord('_'): ord(' '), ord('-'): ord(' ')}).capitalize()
     service_config = dict(
         app_name=config.APP_NAME,
-        title=f"R&P {readable_app_name} REST API",
+        title=f"{readable_app_name} REST API",
         description=f"REST API of {readable_app_name} of Recommendations and Personalization platform",
         version=config.VERSION,
         root_path=config.URL_ROOT_PATH,

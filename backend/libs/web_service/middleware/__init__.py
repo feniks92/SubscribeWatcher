@@ -63,8 +63,6 @@ def add_common_middlewares(app: FastAPI,
     Add middlewares for every route in the app
     """
     rfc7807_middleware.register(app, pre_hooks=(log_error_hook,), add_schema=True)
-    if settings.FEATURES.HIDE_500_DESCRIPTION:
-        app.add_middleware(ExceptionMiddleware)
 
     # add_middleware inserts middleware to top
     app.add_middleware(RequestHeadersMiddleware)

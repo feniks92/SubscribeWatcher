@@ -59,7 +59,7 @@ class ProjectDatasource(Base):
                                                name: str,
                                                owner_id: int,
                                                admin_bot_id: Optional[int] = None,
-                                               tariff_id: Optional[int,] = None,
+                                               tariff_id: Optional[int] = None,
                                                payment_destination: Optional[str] = None,
                                                payment_system_id: Optional[int] = None) -> Project:
 
