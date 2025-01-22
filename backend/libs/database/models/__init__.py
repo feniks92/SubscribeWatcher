@@ -1,5 +1,5 @@
 from .project import Project  # noqa
-from .dicts import GigaTariff, PaymentSystem, UserType  # noqa
+from .dicts import GigaTariff, PaymentSystem  # noqa
 from .payment import Payment  # noqa
 from .subscription import Subscription  # noqa
 from .user import User, UserProfile, ProfileTypes  # noqa

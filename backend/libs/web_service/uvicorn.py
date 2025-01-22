@@ -16,7 +16,6 @@ def run_uvicorn(app: str | None = None, log_model: type[LogExtra] = LogExtra, **
         host=settings.get('HOST', '0.0.0.0'),  # nosec
         port=settings.get('PORT', 80),  # nosec
         access_log=True,
-        debug=settings.DEBUG,
         reload=settings.DEBUG,
         log_config=get_logging_config(level=settings.LOG.LEVEL,
                                       fmt=settings.LOG.FORMAT,

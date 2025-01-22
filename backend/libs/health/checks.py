@@ -3,7 +3,7 @@ from abc import ABC, abstractmethod
 from http import HTTPStatus
 
 from httpx import AsyncClient
-from shared import logging
+from libs import logging
 from starlette.requests import Request
 
 from .registry import HealthCheckCollector

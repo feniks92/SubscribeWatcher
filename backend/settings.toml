@@ -53,3 +53,6 @@ dynaconf_merge = true
     LAVA_TOP.CHECK_PAYMENT_URL = 'v1/invoice'
     # TODO вынести в .secrets.toml
     LAVA_TOP.API_KEY = ''
+
+    SECURE.BASIC_AUTH.USERNAME = ''
+    SECURE.BASIC_AUTH.PASSWORD = ''

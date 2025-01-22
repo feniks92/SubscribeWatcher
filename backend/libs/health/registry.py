@@ -4,8 +4,8 @@ from typing import Iterable
 from prometheus_client import CollectorRegistry, Metric
 from prometheus_client.core import GaugeMetricFamily
 from prometheus_client.registry import Collector
-from shared import logging
-from shared.config import settings
+from libs import logging
+from libs.config import settings
 from starlette.requests import Request
 
 log = logging.getLogger('health')
