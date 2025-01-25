@@ -47,3 +47,5 @@ class LavaTopApi(ApiService):
 
     async def check_payment_status(self, payment_id) -> bool:
         pass
+
+    # async def get_tariffs(self):
