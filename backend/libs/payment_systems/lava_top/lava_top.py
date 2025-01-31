@@ -7,7 +7,7 @@ from .api_client import LavaTopApiClient
 from .models import LavaTopProductsResponse, Offer, Invoice
 
 
-ACCPETABLE_PAYMENT_STATUSES = ('completed', 'subscription-active')
+ACCEPTABLE_PAYMENT_STATUSES = ('completed', 'subscription-active')
 
 class LavaTopApi(ApiService):
     client: LavaTopApiClient.create(settings.LAVA_TOP)
@@ -48,4 +48,5 @@ class LavaTopApi(ApiService):
     async def check_payment_status(self, payment_id) -> bool:
         pass
 
-    # async def get_tariffs(self):
+    async def get_tariffs(self):
+
