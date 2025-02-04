@@ -3,14 +3,16 @@ from starlette.background import BackgroundTasks
 from starlette.requests import Request
 
 from libs import logging
+from libs.database.models import Project
 from libs.database.sql_alchemy import pass_db_session, Session
 from libs.dependencies import ParticipantsInfo
 from libs.shared import TariffListResponse
+from libs.payment_systems.lava_top.models import LavaTopProductsResponse
 from libs.web_service.middleware.headers_parser import get_request_id
 
 from .handler import ProjectHandler, TariffHandler
-from .schemas import (ProjectListResponse, ProjectResponse, GigaTariffListResponse, TariffResponse,
-                      ProjectRequest, TariffListRequest, TariffRequest)
+from .schemas import (ExternalProjectRequest, ProjectListResponse, ProjectResponse, GigaTariffListResponse,
+                      TariffResponse, ProjectRequest, TariffListRequest, TariffRequest)
 
 log = logging.getLogger('owner_handler')
 
@@ -114,7 +116,24 @@ async def owner_projects_update(
                            )
 
 
-#  Add tariffs for project
+# TODO чуть костыльный метод, используется пока для дозаполнения инфы, получаемой из внешних источников (лаватоп).
+# Есть необходимость либо переделать его в вариант GraphQL, либо принимать аналог DTO, либо допилить
+# схемы опциональными параметрами (GraphQL на минималках), тогда потребуется валидация связки параметров
+@router.post("/projects/{project_id}/update", response_model=ProjectResponse)
+async def owner_project_external_update(
+        project_id: int,
+        request: Request,
+        external_project_data: ExternalProjectRequest,
+        background_tasks: BackgroundTasks,
+        db_session: Session = Depends(pass_db_session),
+        participants: ParticipantsInfo = Depends(ParticipantsInfo)
+) -> LavaTopProductsResponse:
+    handler = ProjectHandler(session=db_session,
+                             participants=participants)
+    result = handler.update_by_external(bg_tasks=background_tasks, project_id=project_id, external_project_data=external_project_data)
+
+
+# Add tariffs for project
 @router.post("/projects/{project_id}/tariffs", response_model=TariffListResponse)
 async def owner_projects_tariffs(
         project_id: int,

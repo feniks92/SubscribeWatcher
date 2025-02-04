@@ -9,9 +9,10 @@ from libs.database.datasources.tariff import TariffDatasource
 from libs.database.datasources.dicts import GigaTariffDatasource
 from libs.database.datasources.user import UserDatasource, UserProfileDatasource
 from libs.database.models.user import ProfileTypes
+from libs.payment_systems.lava_top.lava_top import LavaTopApi
 from libs.shared import GigaTariffItem, TariffItem
 
-from .schemas import ProjectRequest, TariffListRequest, TariffRequest
+from .schemas import ProjectRequest, TariffListRequest, TariffRequest, ExternalProjectRequest
 
 log = logging.getLogger('owner_handler')
 
@@ -56,7 +57,7 @@ class ProjectHandler(BaseHandler):
         if project:
             raise HTTPException(status_code=409, detail='Project already exists')
 
-        return await ProjectDatasource(session=self.session).create_or_update_project(
+        return await ProjectDatasource(session=self.session).create_or_update_project_by_name(
             name=project_data.name,
             owner_id=prof.id,
             tariff_id=project_data.tariff_id,
@@ -65,7 +66,24 @@ class ProjectHandler(BaseHandler):
             payment_system_id=project_data.payment_system_id,
         )
 
+    async def update_by_external(self, g_tasks: BackgroundTasks, project_id, project_data: ExternalProjectRequest):
+        await self.get_roles()
+
+        if not (bot_prof := self.gigabot_profile()):
+            raise HTTPException(status_code=401, detail='Your bot have not enough permission')
+
+        if not (prof := self.user_owner_profile()):
+            raise HTTPException(status_code=401, detail='You have not enough permission')
+
+        if not (project := prof.user_get_project_by_id(project_id)):
+            raise HTTPException(status_code=401, detail='Not enough permission')
+
+        external_service = LavaTopApi().get_products()
+
+
+
     async def update(self, bg_tasks: BackgroundTasks, project_id, project_data: ProjectRequest) -> Project:
+        # TODO вынести в метод типа check_permissions
         await self.get_roles()
 
         if not (bot_prof := self.gigabot_profile()):

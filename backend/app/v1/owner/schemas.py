@@ -48,6 +48,12 @@ class GigaTariffListResponse(AuthorizeItem):
 
 
 @dataclass
+class ExternalProjectRequest:
+    api_key: str = Body(..., alias='api_key')
+    payment_system_id: Optional[int] = Body(None, alias='payment_system_id')
+
+
+@dataclass
 class TariffRequest:
     name: Optional[str] = Body('', alias='name')
     description: Optional[str] = Body(..., alias='description')

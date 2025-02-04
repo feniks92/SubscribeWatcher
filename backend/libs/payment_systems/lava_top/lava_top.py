@@ -12,11 +12,12 @@ ACCEPTABLE_PAYMENT_STATUSES = ('completed', 'subscription-active')
 class LavaTopApi(ApiService):
     client: LavaTopApiClient.create(settings.LAVA_TOP)
 
-    def __init__(self, cookies: dict | None = None):
+    def __init__(self, cookies: dict | None = None,
+                 api_key: str | None = None,):
         super().__init__()
 
         self.headers = {
-            "X-Api-Key": settings.LAVA_TOP.API_KEY
+            "X-Api-Key": api_key,
         }
 
         self.cookies = cookies or {}
@@ -49,4 +50,5 @@ class LavaTopApi(ApiService):
         pass
 
     async def get_tariffs(self):
+        ...
 
